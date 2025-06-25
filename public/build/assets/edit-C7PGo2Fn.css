@@ -1,0 +1,1 @@
+*{color:#fff}input,textarea{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px;border-radius:4px}input:focus,textarea:focus{outline:none;border-color:#fff;background:#ffffff1a}input::-moz-placeholder,textarea::-moz-placeholder{color:#fff9}input::placeholder,textarea::placeholder{color:#fff9}
