@@ -1,0 +1,21 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="placeholderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E5E7EB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D1D5DB;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Fondo -->
+  <rect width="128" height="128" fill="url(#placeholderGradient)" rx="8"/>
+  
+  <!-- Icono de imagen -->
+  <g fill="#9CA3AF" opacity="0.6">
+    <rect x="32" y="24" width="64" height="48" rx="4" stroke="#9CA3AF" stroke-width="2" fill="none"/>
+    <circle cx="48" cy="40" r="4" fill="#9CA3AF"/>
+    <path d="M32 72 L48 56 L64 72 L80 56 L96 72 L96 80 L32 80 Z" fill="#9CA3AF"/>
+  </g>
+  
+  <!-- Texto -->
+  <text x="64" y="100" font-family="Arial, sans-serif" font-size="10" fill="#6B7280" text-anchor="middle">Sin imagen</text>
+</svg> 

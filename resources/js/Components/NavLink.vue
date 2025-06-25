@@ -8,9 +8,8 @@ const props = defineProps({
 });
 
 const classes = computed(() => {
-    return props.active
-        ? 'inline-flex items-center px-1 pt-1 border-b-2 border-orange-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-orange-700 transition duration-150 ease-in-out'
-        : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-orange-300 focus:outline-none focus:text-gray-700 focus:border-yellow-300 transition duration-150 ease-in-out';
+        'inline-flex items-center  p-10 border-b-2 border-orange-400 text-sm font-medium leading-5 text-gray-900  transition duration-150 ease-in-out m-20'
+        
 });
 </script>
 
@@ -19,3 +18,14 @@ const classes = computed(() => {
         <slot />
     </Link>
 </template>
+
+<style scoped> 
+* {
+    font-family: 'Georgia' !important;
+    font-size: 1.05rem !important;
+    font-weight: 500 !important;
+    color: #FFFF !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+</style>

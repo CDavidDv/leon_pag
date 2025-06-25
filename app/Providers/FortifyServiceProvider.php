@@ -40,14 +40,6 @@ class FortifyServiceProvider extends ServiceProvider
 
         
 
-        Fortify::loginView(function () {
-            $sucursales = Sucursal::where('id', '!=', 0)->get();
-            
-            return Inertia::render('Auth/Login', [
-                'sucursales' => $sucursales
-            ]);
-        });
-
         RateLimiter::for('login', function (Request $request) {
             
             $user = User::where('email', $request->input(Fortify::username()))->first();

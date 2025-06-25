@@ -1,20 +1,27 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import Almacen from '@/Components/Almacen.vue';
-import GlobalToastNotifications from '@/Components/GlobalToastNotifications.vue';
+import axios from 'axios';
 
 defineProps({
     title: String,
 });
 
 const showingNavigationDropdown = ref(false);
+const isNavbarVisible = ref(true);
+let lastScrollTop = 0;
+
+// Textos del layout
+const layoutTexts = ref({
+    contact_title: "LET'S WORK TOGETHER",
+    contact_description: "We'd love to hear from you, whether you just want to shoot the breeze or discuss a potential opportunity to achieve great things together.",
+    get_in_touch: "Get in touch",
+    send_button: "Send"
+});
 
 const switchToTeam = (team) => {
     router.put(route('current-team.update'), {
@@ -28,210 +35,246 @@ const logout = () => {
     router.post(route('logout'));
 };
 
-const { props } = usePage()
+const handleScroll = () => {
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Si estamos cerca del tope (menos de 100px), mostrar el navbar
+    if (currentScroll < 100) {
+        isNavbarVisible.value = true;
+    } else if (currentScroll > lastScrollTop && currentScroll > 300) {
+        // Scroll hacia abajo y más de 300px
+        isNavbarVisible.value = false;
+    } else if (currentScroll < lastScrollTop && currentScroll < lastScrollTop - 20) {
+        // Scroll hacia arriba y más de 20px
+        isNavbarVisible.value = true;
+    }
+    
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+};
 
-const role = ref(props.user.roles[0]);
-const isAlmacen = role.value === 'almacen';
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll);
+    cargarTextosLayout();
+});
 
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
+});
+
+// Cargar textos del layout desde la base de datos
+const cargarTextosLayout = async () => {
+    try {
+        const response = await axios.get('/api/work-content/text-content');
+        if (response.data.success && response.data.content.layout) {
+            layoutTexts.value = { ...layoutTexts.value, ...response.data.content.layout };
+        }
+    } catch (error) {
+        console.error('Error al cargar textos del layout:', error);
+    }
+};
+
+const showBarContact = () => {
+    console.log('showBarContact');
+    isShowBarContact.value = !isShowBarContact.value;
+}
+
+const isShowBarContact = ref(false);
+const isShowBarContactMobile = ref(false);
+const isShowMenuMobile = ref(false);
+
+const showMenuMobile = () => {
+    isShowMenuMobile.value = !isShowMenuMobile.value;
+}
+
+const showBarContactMobile = () => {
+    isShowBarContactMobile.value = !isShowBarContactMobile.value;
+    if(isShowBarContactMobile.value){
+        isShowMenuMobile.value = false;
+        isShowBarContact.value = false;
+    }
+}
+
+// Exponer la función para que el componente hijo pueda acceder a ella
+defineExpose({
+    showBarContact
+});
 </script>
 
 <template>
-    <div class="absolute inset-0 -z-10 min-h-max w-full  bg-gray-100 bg-[radial-gradient(#824800_1px,#f8d7c180_1px);] [background-size:16px_16px]">
+    <div class="overflow-x-hidden">
         <Head :title="title" />
 
         <Banner />
-        <GlobalToastNotifications />
 
-        <div >
+        <div v-if="isShowMenuMobile" id="menuMobile" class="fixed  w-full h-full flex flex-col justify-end bottom-0 bg-[#0A15E3] left-0 right-0 z-[100]" >
+            <div class="fixed top-0 pr-14 mt-10 right-0">
+                <div class="size-10  cursor-pointer  flex justify-center  items-center" @click="showMenuMobile">
+                    <svg xmlns="http://www.w3.org/2000/svg"  clas1s="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
 
-            <nav class="bg-white border-b border-gray-100 no-print">
+            </div>
+            <div class="flex flex-col gap-4 p-10 w-full h-full justify-center items-start font-extrabold text-white ">
+                <div class="space-x-4 sm:-my-px sm:ms-10 lg:flex text-2xl">
+                            <ResponsiveNavLink :href="route('index')" :active="route().current('index')">
+                                Home
+                            </ResponsiveNavLink>
+                        </div>
+                        <div class="space-x-4 sm:-my-px sm:ms-10 lg:flex">
+                            <ResponsiveNavLink :href="route('work')" :active="route().current('work')">
+                                Work
+                            </ResponsiveNavLink>
+                        </div>
+                        <div class="space-x-4 sm:-my-px sm:ms-10 lg:flex">
+                            <ResponsiveNavLink :href="route('approach')" :active="route().current('approach')">
+                                Aproach
+                            </ResponsiveNavLink>
+                        </div>
+                        
+                        <div class="space-x-4 sm:-my-px sm:ms-10 lg:flex">
+                            <ResponsiveNavLink :href="route('about')" :active="route().current('about')">
+                                About Us
+                            </ResponsiveNavLink>
+                        </div>
+
+                        <div class="cursor-pointer space-x-4 sm:-my-px sm:ms-10 lg:flex ">
+                            <div class="text-white text-5xl font-extrabold " @click="showBarContactMobile">
+                                {{ layoutTexts.get_in_touch }}
+                            </div>
+                        </div>
+            </div>
+        </div>
+
+        <div v-if="isShowBarContact" id="barContact" class="fixed w-full h-full  flex justify-end bottom-0 left-0 right-0 bg-black/40 z-[100]" @click.self="showBarContact">
+            <div class="w-7/12 h-full bg-[#0A15E3] overflow-y-auto">
+                <div class="p-4">
+                    <div class="flex justify-between">
+                        <div class="flex flex-col pl-10 pr-10">
+                            <div class="flex justify-between -mt-14">
+                                <h1 class="text-8xl font-extrabold transform scale-y-75">{{ layoutTexts.contact_title }}</h1>
+                                <div class="w-1/2 h-full flex justify-end items-center">
+                                    <div class="size-10 cursor-pointer flex justify-center  items-center" @click="showBarContact">
+                                        <svg xmlns="http://www.w3.org/2000/svg"  clas1s="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="max-w-2xl pb-8">{{ layoutTexts.contact_description }}</p>
+                            
+                            <div class="flex flex-col gap-2">
+                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Name">
+                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Your email address">
+                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Add message">
+                                <button class="w-full h-32 bg-blue-950/70 uppercase font-extrabold text-white text-4xl transform scale-y-75  rounded-md p-2">{{ layoutTexts.send_button }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div v-if="isShowBarContactMobile" id="barContactMobile" class="fixed  w-full h-full flex justify-end bottom-0 left-0 right-0 bg-black/40 z-[100]" @click.self="showBarContactMobile">
+            <div class="w-full h-full bg-[#0A15E3]  overflow-y-auto">
+                <div class="w-full flex  justify-end pr-10 pt-10" >
+                    <div class="size-10 cursor-pointer flex justify-center  items-center" @click="showBarContactMobile">
+                        <svg xmlns="http://www.w3.org/2000/svg"  clas1s="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-4 pt-20">
+                    
+                    <div class="flex justify-between">
+                        
+                        <div class="flex flex-col pl-10 pr-10">
+                            
+                            <div class="flex justify-between -mt-14">
+                                <h1 class="text-8xl font-extrabold transform scale-y-75">{{ layoutTexts.contact_title }}</h1>
+                                <div class="w-1/2 h-full flex justify-end items-center">
+                                    
+                                </div>
+                            </div>
+                            <p class="max-w-2xl pb-8">{{ layoutTexts.contact_description }}</p>
+                            
+                            <div class="flex flex-col gap-2">
+                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Name">
+                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Your email address">
+                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Add message">
+                                <button class="w-full h-32 bg-blue-950/70 uppercase font-extrabold text-white text-4xl transform scale-y-75  rounded-md p-2">{{ layoutTexts.send_button }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <nav :class="[
+                'fixed w-full z-50 transition-all duration-300 pt-5',
+                isNavbarVisible ? 'translate-y-0' : '-translate-y-full',
+                'lg:bg-transparent bg-[#0A15E3] pb-8 lg:pb-0'
+            ]">
 
                 <!-- Primary Navigation Menu -->
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-1 lg:px-8">
-                    <div class="flex justify-between h-16">
-                        <div class="flex">
+                <div class="max-w-7xl mx-auto   sm:px-6 md:px-1 lg:px-8">
+                    <div class="flex justify-between h-16 pt-6">
+                        <div class="flex justify-end">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link v-if="$page.props.auth.user.roles[0] !== 'almacen'" :href="route('dashboard')">
-                                    <ApplicationMark class="block h-14 p-1 w-auto" />
-                                </Link>
-                                <Link :href="route('almacen')" v-else>
-                                    <ApplicationMark class="block h-14 p-1 w-auto" />
-                                </Link>
+                                <ApplicationMark class="block h-14 p-1 pl-8 w-auto" />
                             </div>
     
                             <!-- Navigation Links -->
 
-                            <!--Almacen-->
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                            
+                        </div>
+                        <div class="hidden xl:flex">
+
+                            <div class="hidden space-x-4 sm:-my-px sm:ms-10 lg:flex">
+                                <NavLink :href="route('index')" :active="route().current('index')">
                                     Home
                                 </NavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="!isAlmacen" >
-                                <NavLink :href="route('hornear')" :active="route().current('hornear')">
-                                    Hornear
+                            <div class="hidden space-x-4 sm:-my-px sm:ms-10 lg:flex">
+                                <NavLink :href="route('work')" :active="route().current('work')">
+                                    Work
                                 </NavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('inventario')" :active="route().current('inventario')">
-                                    Inventario
-                                </NavLink>
-                            </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="!isAlmacen">
-                                <NavLink :href="route('checador')" :active="route().current('checador')">
-                                    Checador
+                            <div class="hidden space-x-4 sm:-my-px sm:ms-10 lg:flex">
+                                <NavLink :href="route('approach')" :active="route().current('approach')">
+                                    Aproach
                                 </NavLink>
                             </div>
                             
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="props.user.roles[0] !== 'trabajador' && !isAlmacen">
-                                <NavLink :href="route('personal')" :active="route().current('personal')">
-                                    Personal
+                            <div class="hidden space-x-4 sm:-my-px sm:ms-10 lg:flex">
+                                <NavLink :href="route('about')" :active="route().current('about')">
+                                    About Us
                                 </NavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="isAlmacen">
-                                <NavLink :href="route('tickets')" :active="route().current('tickets')">
-                                    Tickets Asignados
-                                </NavLink>
-                            </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="!isAlmacen">
-                                <NavLink :href="route('corte-caja')" :active="route().current('corte-caja')">
-                                    Corte
-                                </NavLink>
-                            </div>
-                            
-                        </div>
 
-                        <div class="hidden sm:flex sm:items-center sm:ms-6">
-                            <div class="ms-3 relative">
-                                <!-- Teams Dropdown -->
-                                <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60">
-                                    <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
-                                                {{ $page.props.auth.user.current_team.name }}
-
-                                                <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <div class="w-60">
-                                            <!-- Team Management -->
-                                            <div class="block px-4 py-2 text-xs text-gray-400">
-                                                Manage Team
-                                            </div>
-
-                                            <!-- Team Settings -->
-                                            <DropdownLink :href="route('teams.show', $page.props.auth.user.current_team)">
-                                                Team Settings
-                                            </DropdownLink>
-
-                                            <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
-                                                Create New Team
-                                            </DropdownLink>
-
-                                            <!-- Team Switcher -->
-                                            <template v-if="$page.props.auth.user.all_teams.length > 1">
-                                                <div class="border-t border-gray-200" />
-
-                                                <div class="block px-4 py-2 text-xs text-gray-400">
-                                                    Switch Teams
-                                                </div>
-
-                                                <template v-for="team in $page.props.auth.user.all_teams" :key="team.id">
-                                                    <form @submit.prevent="switchToTeam(team)">
-                                                        <DropdownLink as="button">
-                                                            <div class="flex items-center">
-                                                                <svg v-if="team.id == $page.props.auth.user.current_team_id" class="me-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                                </svg>
-
-                                                                <div>{{ team.name }}</div>
-                                                            </div>
-                                                        </DropdownLink>
-                                                    </form>
-                                                </template>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </Dropdown>
-                            </div>
-
-                            <!-- Settings Dropdown -->
-                            <div class="ms-3 relative">
-                                <Dropdown align="right" width="48">
-                                    <template #trigger>
-                                        <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                            <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
-                                        </button>
-
-                                        <span v-else class="inline-flex rounded-md">
-                                            <button type="button" class="inline-flex capitalize items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
-                                                {{ $page.props.auth.user.name }}
-
-                                                <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <!-- Account Management -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Cuenta
-                                        </div>
-
-                                        <DropdownLink :href="route('profile.show')">
-                                            Perfil
-                                        </DropdownLink>
-
-                                        <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
-                                            API Tokens
-                                        </DropdownLink>
-
-                                        <div class="border-t border-gray-200" />
-
-                                        <!-- Authentication -->
-                                        <form @submit.prevent="logout">
-                                            <DropdownLink as="button">
-                                                Cerrar sesión
-                                            </DropdownLink>
-                                        </form>
-                                    </template>
-                                </Dropdown>
+                            <div class="hidden cursor-pointer space-x-4 sm:-my-px sm:ms-10 lg:flex">
+                                <div @click="showBarContact">
+                                    {{ layoutTexts.get_in_touch }}
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
-                            <button class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out" @click="showingNavigationDropdown = ! showingNavigationDropdown">
-                                <svg
-                                    class="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        :class="{'hidden': showingNavigationDropdown, 'inline-flex': ! showingNavigationDropdown }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        :class="{'hidden': ! showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
+                        <div class="flex xl:hidden">
+                            <div class="flex justify-end size-10 cursor-pointer text-white p-2 mr-5 mt-0" @click="showMenuMobile">
+                                <svg data-bbox="25.264 17.534 149.471 164.932" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" data-type="shape" class="text-white" currentColor="white">
+                                    <g>
+                                        <path d="M35.572 38.15h128.855c5.693 0 10.308-4.616 10.308-10.308s-4.616-10.308-10.308-10.308H35.572c-5.693 0-10.308 4.616-10.308 10.308S29.88 38.15 35.572 38.15z"></path>
+                                        <path d="M164.428 89.692H35.572c-5.693 0-10.308 4.616-10.308 10.308s4.616 10.308 10.308 10.308h128.855c5.693 0 10.308-4.616 10.308-10.308s-4.615-10.308-10.307-10.308z"></path>
+                                        <path d="M164.428 161.85H87.114c-5.693 0-10.308 4.616-10.308 10.308 0 5.693 4.616 10.308 10.308 10.308h77.313c5.693 0 10.308-4.616 10.308-10.308.001-5.692-4.615-10.308-10.307-10.308z"></path>
+                                    </g>
                                 </svg>
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -244,51 +287,28 @@ const isAlmacen = role.value === 'almacen';
                         </ResponsiveNavLink>
                     </div>
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('hornear')" :active="route().current('hornear')" v-if="!isAlmacen">
-                            Hornear
-                        </ResponsiveNavLink>
-                    </div>
-                    <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('inventario')" :active="route().current('inventario')">
+                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Inventario
                         </ResponsiveNavLink>
                     </div>
-                    <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('checador')" :active="route().current('checador')" v-if="!isAlmacen">
-                            Checador
-                        </ResponsiveNavLink>
-                    </div>
                     
-                    <div class="pt-2 pb-3 space-y-1" v-if="props.user.roles[0] !== 'trabajador' && !isAlmacen">
-                        
-                        <ResponsiveNavLink :href="route('personal')" :active="route().current('personal')" >
-                            Personal
-                        </ResponsiveNavLink>
-                    </div>
-                    <div class="pt-2 pb-3 space-y-1" v-if="isAlmacen">
-                        <ResponsiveNavLink :href="route('tickets')" :active="route().current('tickets')">
-                            Tickets Asignados
-                        </ResponsiveNavLink>
-                    </div>
-                    <div class="pt-2 pb-3 space-y-1" v-if="!isAlmacen">
-                        <ResponsiveNavLink :href="route('corte-caja')" :active="route().current('corte-caja')">
-                            Corte
-                        </ResponsiveNavLink>
-                    </div>
+                    
+                    
+                    
 
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200">
                         <div class="flex items-center px-4">
                             <div v-if="$page.props.jetstream.managesProfilePhotos" class="shrink-0 me-3">
-                                <img class="h-10 w-10 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
+                                <img class="h-10 w-10 rounded-full object-cover" :src="$page?.props?.auth?.user?.profile_photo_url" :alt="$page?.props?.auth?.user?.name">
                             </div>
 
                             <div>
                                 <div class="font-medium text-base text-gray-800">
-                                    {{ $page.props.auth.user.name }}
+                                    {{ $page?.props?.auth?.user?.name }}
                                 </div>
                                 <div class="font-medium text-sm text-gray-500">
-                                    {{ $page.props.auth.user.email }}
+                                    {{ $page?.props?.auth?.user?.email }}
                                 </div>
                             </div>
                         </div>
@@ -367,26 +387,16 @@ const isAlmacen = role.value === 'almacen';
         </div>
     </div>
 </template>
+
 <style>
-.print {
-    display: block !important;
+main {
+    font-family: 'Anton', sans-serif;
+    background-color: #0A15E3 !important;
 }
 
-@media print {
-    .no-print {
-    display: none !important;
-    }
-
-    .print {
-    display: block !important;
-    }
-
-    astro-dev-toolbar {
-    display: none !important;
-    }
-
-    article {
-    break-inside: avoid;
-    }
+main {
+    padding: 0 !important;
+    margin: 0 !important;
 }
+
 </style>

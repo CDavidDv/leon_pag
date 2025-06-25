@@ -1,0 +1,65 @@
+<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="aboutGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F3F4F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E5E7EB;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="personGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Fondo -->
+  <rect width="600" height="400" fill="url(#aboutGradient)"/>
+  
+  <!-- Título -->
+  <text x="300" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1F2937" text-anchor="middle">Nuestro Equipo</text>
+  <text x="300" y="60" font-family="Arial, sans-serif" font-size="14" fill="#6B7280" text-anchor="middle">Profesionales apasionados por la tecnología</text>
+  
+  <!-- Persona 1 -->
+  <circle cx="150" cy="150" r="50" fill="url(#personGradient)"/>
+  <text x="150" y="160" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle">👨‍💻</text>
+  <text x="150" y="220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1F2937" text-anchor="middle">Carlos López</text>
+  <text x="150" y="240" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Desarrollador Full-Stack</text>
+  
+  <!-- Persona 2 -->
+  <circle cx="300" cy="150" r="50" fill="url(#personGradient)"/>
+  <text x="300" y="160" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle">👩‍💻</text>
+  <text x="300" y="220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1F2937" text-anchor="middle">Ana García</text>
+  <text x="300" y="240" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Diseñadora UX/UI</text>
+  
+  <!-- Persona 3 -->
+  <circle cx="450" cy="150" r="50" fill="url(#personGradient)"/>
+  <text x="450" y="160" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle">👨‍🔧</text>
+  <text x="450" y="220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1F2937" text-anchor="middle">Miguel Torres</text>
+  <text x="450" y="240" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Arquitecto de Software</text>
+  
+  <!-- Estadísticas del equipo -->
+  <rect x="50" y="280" width="500" height="100" fill="white" rx="8" opacity="0.9"/>
+  
+  <!-- Estadística 1 -->
+  <text x="150" y="310" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#3B82F6" text-anchor="middle">50+</text>
+  <text x="150" y="330" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Proyectos</text>
+  <text x="150" y="345" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Completados</text>
+  
+  <!-- Estadística 2 -->
+  <text x="300" y="310" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#3B82F6" text-anchor="middle">5+</text>
+  <text x="300" y="330" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Años de</text>
+  <text x="300" y="345" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Experiencia</text>
+  
+  <!-- Estadística 3 -->
+  <text x="450" y="310" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#3B82F6" text-anchor="middle">100%</text>
+  <text x="450" y="330" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Clientes</text>
+  <text x="450" y="345" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Satisfechos</text>
+  
+  <!-- Líneas conectoras -->
+  <line x1="200" y1="150" x2="250" y2="150" stroke="#3B82F6" stroke-width="2" opacity="0.5"/>
+  <line x1="350" y1="150" x2="400" y2="150" stroke="#3B82F6" stroke-width="2" opacity="0.5"/>
+  
+  <!-- Elementos decorativos -->
+  <circle cx="100" cy="100" r="20" fill="#3B82F6" opacity="0.1"/>
+  <circle cx="500" cy="80" r="15" fill="#3B82F6" opacity="0.1"/>
+  <circle cx="80" cy="320" r="12" fill="#3B82F6" opacity="0.1"/>
+  <circle cx="520" cy="350" r="18" fill="#3B82F6" opacity="0.1"/>
+</svg> 

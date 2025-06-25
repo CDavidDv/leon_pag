@@ -1,0 +1,71 @@
+<svg width="1200" height="600" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E40AF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#60A5FA;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="circleGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Fondo principal -->
+  <rect width="1200" height="600" fill="url(#heroGradient)"/>
+  
+  <!-- Círculos decorativos -->
+  <circle cx="200" cy="150" r="80" fill="url(#circleGradient)"/>
+  <circle cx="1000" cy="100" r="120" fill="url(#circleGradient)"/>
+  <circle cx="150" cy="450" r="60" fill="url(#circleGradient)"/>
+  <circle cx="1100" cy="500" r="100" fill="url(#circleGradient)"/>
+  <circle cx="600" cy="200" r="40" fill="url(#circleGradient)"/>
+  <circle cx="800" cy="400" r="70" fill="url(#circleGradient)"/>
+  
+  <!-- Líneas geométricas -->
+  <line x1="0" y1="300" x2="1200" y2="300" stroke="white" stroke-width="1" opacity="0.1"/>
+  <line x1="600" y1="0" x2="600" y2="600" stroke="white" stroke-width="1" opacity="0.1"/>
+  
+  <!-- Patrón de puntos -->
+  <circle cx="100" cy="100" r="2" fill="white" opacity="0.3"/>
+  <circle cx="300" cy="80" r="2" fill="white" opacity="0.3"/>
+  <circle cx="500" cy="120" r="2" fill="white" opacity="0.3"/>
+  <circle cx="700" cy="90" r="2" fill="white" opacity="0.3"/>
+  <circle cx="900" cy="150" r="2" fill="white" opacity="0.3"/>
+  <circle cx="1100" cy="110" r="2" fill="white" opacity="0.3"/>
+  
+  <circle cx="150" cy="300" r="2" fill="white" opacity="0.3"/>
+  <circle cx="350" cy="280" r="2" fill="white" opacity="0.3"/>
+  <circle cx="550" cy="320" r="2" fill="white" opacity="0.3"/>
+  <circle cx="750" cy="290" r="2" fill="white" opacity="0.3"/>
+  <circle cx="950" cy="350" r="2" fill="white" opacity="0.3"/>
+  <circle cx="1150" cy="310" r="2" fill="white" opacity="0.3"/>
+  
+  <circle cx="200" cy="500" r="2" fill="white" opacity="0.3"/>
+  <circle cx="400" cy="480" r="2" fill="white" opacity="0.3"/>
+  <circle cx="600" cy="520" r="2" fill="white" opacity="0.3"/>
+  <circle cx="800" cy="490" r="2" fill="white" opacity="0.3"/>
+  <circle cx="1000" cy="550" r="2" fill="white" opacity="0.3"/>
+  
+  <!-- Elementos de tecnología -->
+  <g opacity="0.1">
+    <!-- Código binario -->
+    <text x="50" y="80" font-family="monospace" font-size="12" fill="white">10101010</text>
+    <text x="50" y="95" font-family="monospace" font-size="12" fill="white">11001100</text>
+    <text x="50" y="110" font-family="monospace" font-size="12" fill="white">10101010</text>
+    
+    <text x="1050" y="520" font-family="monospace" font-size="12" fill="white">01010101</text>
+    <text x="1050" y="535" font-family="monospace" font-size="12" fill="white">00110011</text>
+    <text x="1050" y="550" font-family="monospace" font-size="12" fill="white">01010101</text>
+  </g>
+  
+  <!-- Iconos de tecnología -->
+  <g opacity="0.2">
+    <text x="200" y="200" font-family="Arial, sans-serif" font-size="24" fill="white">💻</text>
+    <text x="1000" y="180" font-family="Arial, sans-serif" font-size="24" fill="white">📱</text>
+    <text x="150" y="500" font-family="Arial, sans-serif" font-size="24" fill="white">🌐</text>
+    <text x="1100" y="550" font-family="Arial, sans-serif" font-size="24" fill="white">⚡</text>
+    <text x="600" y="250" font-family="Arial, sans-serif" font-size="24" fill="white">🔧</text>
+    <text x="800" y="450" font-family="Arial, sans-serif" font-size="24" fill="white">🚀</text>
+  </g>
+</svg> 
