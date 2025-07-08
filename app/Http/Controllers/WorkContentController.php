@@ -244,14 +244,19 @@ class WorkContentController extends Controller
         $sections = [
             'hero', 'slogan', 'subheading', 'lastslogan', 'problem', 'services', 
             'approach_hero', 'approach_main', 'explore_phase', 'design_phase', 'create_phase', 'work_with_us',
-            'layout', 'marketing', 'footer'
+            'layout', 'marketing', 'footer', 'about'
         ];
         $content = [];
 
         foreach ($sections as $section) {
-            $content[$section] = WorkContent::getSectionContent($section);
+            $sectionContent = WorkContent::getSectionContent($section);
+            $content[$section] = [];
+            
+            foreach ($sectionContent as $fieldName => $item) {
+                $content[$section][$fieldName] = $item->content;
+            }
         }
 
-        return response()->json(['content' => $content]);
+        return response()->json(['success' => true, 'content' => $content]);
     }
 }

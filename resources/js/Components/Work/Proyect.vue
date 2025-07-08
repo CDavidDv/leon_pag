@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import ProjectImage from './ProjectImage.vue';
+import EditableText from '../EditableText.vue';
 
 const props = defineProps({
     title: {
@@ -34,10 +35,22 @@ const props = defineProps({
     isEditing: {
         type: Boolean,
         default: false
+    },
+    initialTitle: {
+        type: String,
+        default: ''
+    },
+    initialDescription1: {
+        type: String,
+        default: ''
+    },
+    initialDescription2: {
+        type: String,
+        default: ''
     }
 });
 
-const emit = defineEmits(['image-updated']);
+const emit = defineEmits(['image-updated', 'text-updated']);
 
 // Función para obtener la URL correcta de la imagen
 const getImageUrl = (path) => {
@@ -69,6 +82,15 @@ const processedImages = computed(() => {
 // Función para manejar actualización de imagen individual
 const handleImageUpdated = (data) => {
     emit('image-updated', data);
+};
+
+// Función para manejar actualización de textos
+const handleTextUpdated = (field, value) => {
+    emit('text-updated', {
+        section: props.projectId,
+        field: field,
+        value: value
+    });
 };
 
 // Función para agregar nueva imagen
@@ -139,9 +161,32 @@ function getMediaIndex(rowIndex, colIndex) {
         <!-- Contenido del proyecto -->
         <div class="flex flex-col gap-4 pl-20 pt-20">
             <a :href="link" class="text-white lg:text-2xl text-xl font-bold">{{ linkText }}</a>
-            <h1 class="text-white lg:text-7xl text-4xl font-extrabold leading-none max-w-[500px]">{{ title }}</h1>
+            <EditableText
+                :model-value="title"
+                :is-editing="isEditing"
+                tag="h1"
+                class="text-white lg:text-7xl text-4xl font-extrabold leading-none max-w-[500px]"
+                @update:model-value="(value) => handleTextUpdated('title', value)"
+            />
             <div class="text-white max-w-md flex flex-col gap-4 mb-20 pr-14">
-                <p v-for="(description, index) in descriptions" :key="index">{{ description }}</p>
+                <EditableText
+                    v-if="descriptions[0]"
+                    :model-value="descriptions[0]"
+                    :is-editing="isEditing"
+                    tag="p"
+                    class="text-white"
+                    :multiline="true"
+                    @update:model-value="(value) => handleTextUpdated('description_1', value)"
+                />
+                <EditableText
+                    v-if="descriptions[1]"
+                    :model-value="descriptions[1]"
+                    :is-editing="isEditing"
+                    tag="p"
+                    class="text-white"
+                    :multiline="true"
+                    @update:model-value="(value) => handleTextUpdated('description_2', value)"
+                />
             </div>
         </div>
 

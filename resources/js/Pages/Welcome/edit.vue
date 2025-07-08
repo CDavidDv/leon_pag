@@ -13,6 +13,7 @@ import Marketing from '@/Components/Home/MarketingEdit.vue';
 import Footer from '@/Components/Home/FooterEdit.vue';
 import FloatingButton from '@/Components/Home/FloatingButtonEdit.vue';
 import TestImageUploader from '@/Components/TestImageUploader.vue';
+import BackgroundColorEditor from '@/Components/BackgroundColorEditor.vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
@@ -320,6 +321,17 @@ const handleFloatingButtonImageUpdated = async (imageData) => {
     }
 };
 
+// Función para manejar actualización del color de fondo
+const handleBackgroundColorUpdated = (newColor) => {
+    console.log('Color de fondo actualizado:', newColor);
+    
+    // Mostrar notificación de cambios guardados
+    changesSaved.value = true;
+    setTimeout(() => {
+        changesSaved.value = false;
+    }, 3000);
+};
+
 onMounted(() => {
     cargarMultimedia();
 });
@@ -368,6 +380,13 @@ onMounted(() => {
                     {{ isEditing ? 'Salir Edición' : 'Editar' }}
                 </button>
             </div>
+
+            <!-- Editor de color de fondo -->
+            <BackgroundColorEditor 
+                v-if="isEditing"
+                :is-editing="isEditing"
+                @background-color-updated="handleBackgroundColorUpdated"
+            />
 
             <!-- Indicador de modo de edición -->
             <div 

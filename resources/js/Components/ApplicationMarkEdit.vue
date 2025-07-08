@@ -1,19 +1,20 @@
 <template>
-    <div class="flex w-full justify-center items-center space-y-4">
+    <div class="flex flex-col items-center space-y-2">
         <!-- Imagen actual -->
         <img 
             :src="imagenActual" 
             alt="Logo de la empresa" 
-            class="w-32 h-32 object-contain"
+            class="w-full h-full object-contain"
         />
         
-        <!-- Botón para seleccionar imagen -->
+        <!-- Botón para seleccionar imagen (solo visible en modo edición) -->
         <button 
-            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors duration-200"
+            v-if="isEditing"
+            class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs transition-colors duration-200"
             @click="seleccionarImagen"
             :disabled="isUploading"
         >
-            {{ isUploading ? 'Subiendo...' : 'Seleccionar imagen nueva' }}
+            {{ isUploading ? 'Subiendo...' : 'Cambiar logo' }}
         </button>
         
         <!-- Input file oculto -->
@@ -26,25 +27,25 @@
         />
         
         <!-- Vista previa de la nueva imagen -->
-        <div v-if="nuevaImagen" class="mt-4">
-            <h3 class="text-sm font-medium text-gray-700 mb-2">Vista previa:</h3>
+        <div v-if="nuevaImagen && isEditing" class="mt-2">
+            <h3 class="text-xs font-medium text-gray-700 mb-1">Vista previa:</h3>
             <img 
                 :src="nuevaImagen" 
                 alt="Vista previa" 
-                class="rounded-full w-24 h-24 object-cover border-2 border-blue-300"
+                class="w-16 h-16 object-cover border-2 border-blue-300 rounded"
             />
-            <div class="mt-2 space-x-2">
+            <div class="mt-1 space-x-1">
                 <button 
                     @click="confirmarCambio"
                     :disabled="isUploading"
-                    class="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm"
+                    class="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-2 py-1 rounded text-xs"
                 >
                     {{ isUploading ? 'Subiendo...' : 'Confirmar' }}
                 </button>
                 <button 
                     @click="cancelarCambio"
                     :disabled="isUploading"
-                    class="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm"
+                    class="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white px-2 py-1 rounded text-xs"
                 >
                     Cancelar
                 </button>
@@ -52,8 +53,8 @@
         </div>
 
         <!-- Mensaje de estado -->
-        <div v-if="mensaje" :class="[
-            'mt-2 p-2 rounded text-sm',
+        <div v-if="mensaje && isEditing" :class="[
+            'mt-1 p-1 rounded text-xs',
             mensajeTipo === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
         ]">
             {{ mensaje }}
@@ -67,8 +68,15 @@ import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
 
+const props = defineProps({
+    isEditing: {
+        type: Boolean,
+        default: false
+    }
+});
+
 const fileInput = ref(null);
-const props = usePage().props;
+const pageProps = usePage().props;
 
 // Estado del componente
 const nuevaImagen = ref(null);
@@ -79,7 +87,7 @@ const mensajeTipo = ref('');
 
 // Computed para la imagen actual
 const imagenActual = computed(() => {
-    const logoPath = props?.media?.logo?.[0]?.path;
+    const logoPath = pageProps?.media?.logo?.[0]?.path;
     if (logoPath) {
         // Si ya tiene /storage/, no agregar nada
         if (logoPath.startsWith('/storage/')) {
@@ -92,8 +100,10 @@ const imagenActual = computed(() => {
         // Por defecto, asumir que está en storage
         return `/storage/${logoPath}`;
     }
-    return '/images/logo.svg';
+    return `${props}`;
 });
+
+console.log(pageProps)
 
 const seleccionarImagen = () => {
     fileInput.value.click();
@@ -154,12 +164,12 @@ const confirmarCambio = async () => {
             archivoSeleccionado.value = null;
             fileInput.value.value = '';
             
-            mostrarMensaje('Imagen actualizada exitosamente', 'success');
+            mostrarMensaje('Logo actualizado exitosamente', 'success');
             
             // Emitir evento para notificar al componente padre
             emit('imageUpdated', response.data.data);
             
-            // Recargar los datos usando Inertia (más eficiente que window.location.reload())
+            // Recargar los datos usando Inertia
             router.reload({ only: ['media'] });
         } else {
             mostrarMensaje(response.data.message || 'Error al subir la imagen', 'error');

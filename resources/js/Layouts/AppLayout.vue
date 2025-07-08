@@ -17,10 +17,10 @@ let lastScrollTop = 0;
 
 // Textos del layout
 const layoutTexts = ref({
-    contact_title: "LET'S WORK TOGETHER",
-    contact_description: "We'd love to hear from you, whether you just want to shoot the breeze or discuss a potential opportunity to achieve great things together.",
-    get_in_touch: "Get in touch",
-    send_button: "Send"
+    contact_title: "TRABAJEMOS JUNTOS",
+    contact_description: "Nos encantaría saber de ti, ya sea para charlar informalmente o para discutir una potencial oportunidad de lograr grandes cosas juntos.",
+    get_in_touch: "Contáctanos",
+    send_button: "Enviar"
 });
 
 const switchToTeam = (team) => {
@@ -55,6 +55,7 @@ const handleScroll = () => {
 onMounted(() => {
     window.addEventListener('scroll', handleScroll);
     cargarTextosLayout();
+    cargarColorFondo();
 });
 
 onUnmounted(() => {
@@ -98,6 +99,20 @@ const showBarContactMobile = () => {
 defineExpose({
     showBarContact
 });
+
+// Cargar color de fondo desde la base de datos y aplicarlo como variable CSS global
+const cargarColorFondo = async () => {
+    try {
+        const response = await axios.get('/api/site-config/background-color');
+        console.log("color de fondo")
+        console.log(response.data.data);
+        if (response.data.success && response.data.data) {
+            document.documentElement.style.setProperty('--site-background-color', response.data.data);
+        }
+    } catch (error) {
+        console.error('Error al cargar el color de fondo:', error);
+    }
+};
 </script>
 
 <template>
@@ -106,7 +121,7 @@ defineExpose({
 
         <Banner />
 
-        <div v-if="isShowMenuMobile" id="menuMobile" class="fixed  w-full h-full flex flex-col justify-end bottom-0 bg-[#0A15E3] left-0 right-0 z-[100]" >
+        <div v-if="isShowMenuMobile" id="menuMobile" class="fixed  w-full h-full flex flex-col justify-end bottom-0 left-0 right-0 z-[100]" style="background-color: var(--site-background-color, #0A15E3);" >
             <div class="fixed top-0 pr-14 mt-10 right-0">
                 <div class="size-10  cursor-pointer  flex justify-center  items-center" @click="showMenuMobile">
                     <svg xmlns="http://www.w3.org/2000/svg"  clas1s="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -148,11 +163,11 @@ defineExpose({
         </div>
 
         <div v-if="isShowBarContact" id="barContact" class="fixed w-full h-full  flex justify-end bottom-0 left-0 right-0 bg-black/40 z-[100]" @click.self="showBarContact">
-            <div class="w-7/12 h-full bg-[#0A15E3] overflow-y-auto">
+            <div class="w-7/12 h-full overflow-y-auto" style="background-color: var(--site-background-color, #0A15E3);">
                 <div class="p-4">
                     <div class="flex justify-between">
                         <div class="flex flex-col pl-10 pr-10">
-                            <div class="flex justify-between -mt-14">
+                            <div class="flex justify-between">
                                 <h1 class="text-8xl font-extrabold transform scale-y-75">{{ layoutTexts.contact_title }}</h1>
                                 <div class="w-1/2 h-full flex justify-end items-center">
                                     <div class="size-10 cursor-pointer flex justify-center  items-center" @click="showBarContact">
@@ -166,9 +181,9 @@ defineExpose({
                             <p class="max-w-2xl pb-8">{{ layoutTexts.contact_description }}</p>
                             
                             <div class="flex flex-col gap-2">
-                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Name">
-                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Your email address">
-                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Add message">
+                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Nombre">
+                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Tu correo electrónico">
+                                <input type="text" class="w-full hover:bg-white/10 h-10 border border-white bg-white/5 text-white rounded-md pl-8 py-10 mb-2 text-xl focus:border-white focus:bg-white/10 focus:border-2 placeholder-white" placeholder="Mensaje">
                                 <button class="w-full h-32 bg-blue-950/70 uppercase font-extrabold text-white text-4xl transform scale-y-75  rounded-md p-2">{{ layoutTexts.send_button }}</button>
                             </div>
                         </div>
@@ -179,7 +194,7 @@ defineExpose({
 
 
         <div v-if="isShowBarContactMobile" id="barContactMobile" class="fixed  w-full h-full flex justify-end bottom-0 left-0 right-0 bg-black/40 z-[100]" @click.self="showBarContactMobile">
-            <div class="w-full h-full bg-[#0A15E3]  overflow-y-auto">
+            <div class="w-full h-full overflow-y-auto" style="background-color: var(--site-background-color, #0A15E3);">
                 <div class="w-full flex  justify-end pr-10 pt-10" >
                     <div class="size-10 cursor-pointer flex justify-center  items-center" @click="showBarContactMobile">
                         <svg xmlns="http://www.w3.org/2000/svg"  clas1s="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -218,8 +233,8 @@ defineExpose({
             <nav :class="[
                 'fixed w-full z-50 transition-all duration-300 pt-5',
                 isNavbarVisible ? 'translate-y-0' : '-translate-y-full',
-                'lg:bg-transparent bg-[#0A15E3] pb-8 lg:pb-0'
-            ]">
+                'lg:bg-transparent pb-8 lg:pb-0'
+            ]" style="background-color: var(--site-background-color, #0A15E3);">
 
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto   sm:px-6 md:px-1 lg:px-8">
@@ -238,23 +253,23 @@ defineExpose({
 
                             <div class="hidden space-x-4 sm:-my-px sm:ms-10 lg:flex">
                                 <NavLink :href="route('index')" :active="route().current('index')">
-                                    Home
+                                    Inicio
                                 </NavLink>
                             </div>
                             <div class="hidden space-x-4 sm:-my-px sm:ms-10 lg:flex">
                                 <NavLink :href="route('work')" :active="route().current('work')">
-                                    Work
+                                    Trabajos
                                 </NavLink>
                             </div>
                             <div class="hidden space-x-4 sm:-my-px sm:ms-10 lg:flex">
                                 <NavLink :href="route('approach')" :active="route().current('approach')">
-                                    Aproach
+                                    Enfoque
                                 </NavLink>
                             </div>
                             
                             <div class="hidden space-x-4 sm:-my-px sm:ms-10 lg:flex">
                                 <NavLink :href="route('about')" :active="route().current('about')">
-                                    About Us
+                                    Sobre Nosotros
                                 </NavLink>
                             </div>
 
@@ -391,7 +406,7 @@ defineExpose({
 <style>
 main {
     font-family: 'Anton', sans-serif;
-    background-color: #0A15E3 !important;
+    background-color: var(--site-background-color, #0A15E3) !important;
 }
 
 main {

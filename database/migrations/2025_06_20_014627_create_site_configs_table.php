@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('site_configs', function (Blueprint $table) {
             $table->id();
+            $table->string('key')->unique(); // 'background_color', 'primary_color', etc.
+            $table->text('value'); // El valor de la configuración
+            $table->string('type')->default('string'); // 'string', 'color', 'number', 'boolean'
+            $table->string('description')->nullable(); // Descripción de la configuración
             $table->timestamps();
         });
     }

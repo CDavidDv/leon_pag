@@ -4,7 +4,7 @@ import Marketing from '@/Components/Home/Marketing.vue';
 import Footer from '@/Components/Home/Footer.vue';
 import VideoUploader from '@/Components/VideoUploader.vue';
 import EditableText from '@/Components/EditableText.vue';
-import FloatingButton from '@/Components/Home/FloatingButtonEdit.vue';
+
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
@@ -63,8 +63,6 @@ const approachVideos = ref({
     section3: ''
 });
 
-// Estado para la imagen del botón flotante
-const floatingButtonImage = ref(null);
 
 // Cargar datos multimedia
 const cargarMultimedia = async () => {
@@ -85,11 +83,7 @@ const cargarMultimedia = async () => {
             });
         }
 
-        // Cargar imagen del botón flotante
-        const floatingButtonResponse = await axios.get('/api/media/images/floating_button');
-        if (floatingButtonResponse.data.success && floatingButtonResponse.data.data.length > 0) {
-            floatingButtonImage.value = floatingButtonResponse.data.data[0];
-        }
+       
     } catch (error) {
         console.error('Error al cargar multimedia:', error);
     }
@@ -130,19 +124,7 @@ const handleTextUpdated = async (data) => {
     }
 };
 
-// Función para manejar actualización de imagen del botón flotante
-const handleFloatingButtonImageUpdated = async (imageData) => {
-    try {
-        floatingButtonImage.value = imageData;
-        // Mostrar notificación de cambios guardados
-        changesSaved.value = true;
-        setTimeout(() => {
-            changesSaved.value = false;
-        }, 3000);
-    } catch (error) {
-        console.error('Error al actualizar imagen del botón flotante:', error);
-    }
-};
+
 
 onMounted(() => {
     cargarMultimedia();
@@ -551,10 +533,6 @@ onMounted(() => {
         <Marketing />
             <Footer />
 
-            <FloatingButton 
-                :floating-button-image="floatingButtonImage"
-                @image-updated="handleFloatingButtonImageUpdated"
-            />
     </AppLayout>
 </template>
 

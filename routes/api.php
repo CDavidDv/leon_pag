@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WorkContentController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\SiteConfigController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,3 +43,15 @@ Route::get('/media/images/{section}', [MediaController::class, 'getSectionImages
 Route::get('/media/videos/{section}', [MediaController::class, 'getSectionVideos']);
 Route::get('/media/project/{section}', [MediaController::class, 'getProjectMedia']);
 Route::get('/media/{section}', [MediaController::class, 'getSectionMedia']);
+
+// Rutas para SiteConfig
+Route::get('/site-config', [SiteConfigController::class, 'index']);
+Route::get('/site-config/background-color', [SiteConfigController::class, 'getBackgroundColor']);
+Route::post('/site-config/background-color', [SiteConfigController::class, 'updateBackgroundColor']);
+Route::get('/site-config/{key}', [SiteConfigController::class, 'show']);
+Route::put('/site-config/{key}', [SiteConfigController::class, 'update']);
+
+// Rutas para Contacto
+Route::post('/contact/send', [ContactController::class, 'sendMessage']);
+Route::get('/contact/messages', [ContactController::class, 'getMessages']);
+Route::put('/contact/messages/{id}/read', [ContactController::class, 'markAsRead']);

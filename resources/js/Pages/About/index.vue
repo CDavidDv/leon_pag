@@ -52,6 +52,14 @@ const textContent = ref({
     }
 });
 
+// Estado para el contenido de texto de About
+const aboutContent = ref({});
+
+// Función para obtener contenido de una sección
+const getContent = (section, fieldName, defaultValue = '') => {
+    return aboutContent.value[section]?.[fieldName] || defaultValue;
+};
+
 const showBarContact = () => {
     if (appLayoutRef.value) {
         appLayoutRef.value.showBarContact();
@@ -92,6 +100,13 @@ const cargarMultimedia = async () => {
 // Cargar textos desde la base de datos
 const cargarTextos = async () => {
     try {
+        // Cargar contenido de texto desde WorkContent
+        const workContentResponse = await axios.get('/api/work-content');
+        if (workContentResponse.data.content) {
+            aboutContent.value = workContentResponse.data.content;
+        }
+
+        // Cargar textos de marketing, footer y about
         const response = await axios.get('/api/work-content/text-content');
         if (response.data.success) {
             // Actualizar el estado con los textos cargados
@@ -102,6 +117,11 @@ const cargarTextos = async () => {
                     });
                 }
             });
+            
+            // Cargar específicamente los textos de about
+            if (response.data.content.about) {
+                aboutContent.value.about = response.data.content.about;
+            }
         }
     } catch (error) {
         console.error('Error al cargar textos:', error);
@@ -121,19 +141,19 @@ onMounted(() => {
             <div class="relative z-20">
            <div class="w-full lg:h-screen py-40 lg:py-0 flex flex-col justify-center items-center px-8">
                <h1 class="lg:text-7xl text-4xl max-w-2xl text-center font-extrabold transform scale-y-75">
-                MADE BY EXPERIENCE
+                {{ getContent('about', 'title', 'MADE BY EXPERIENCE') }}
                </h1>
-                    <p class="text-normal mb-10 max-w-xl text-center">Over twenty years of agency and client-side experience created a burning itch of curiosity so great that we simply had to scratch it.</p>
-                    <p class="text-normal mb-10 max-w-xl text-center">Having spent decades railing against mediocrity, vacuum-packed marketing and increasingly homogeneous brands, we wanted to create an agency that does things better and more in line with what matters most to our clients.</p>
+                    <p class="text-normal mb-10 max-w-xl text-center">{{ getContent('about', 'paragraph_1', 'Over twenty years of agency and client-side experience created a burning itch of curiosity so great that we simply had to scratch it.') }}</p>
+                    <p class="text-normal mb-10 max-w-xl text-center">{{ getContent('about', 'paragraph_2', 'Having spent decades railing against mediocrity, vacuum-packed marketing and increasingly homogeneous brands, we wanted to create an agency that does things better and more in line with what matters most to our clients.') }}</p>
            </div>
 
            <div class="w-full lg:h-screen py-40 lg:py-0 flex flex-col justify-center items-center px-8">
                <h1 class="lg:text-7xl text-4xl max-w-3xl text-center font-extrabold transform scale-y-75">
-                WHEN MONEY AND REPUTATION IS INVOLVED, IT'S IMPORTANT YOU CHOOSE PEOPLE THAT FIERCELY PROTECT IT.
+                {{ getContent('about', 'section2_title', 'WHEN MONEY AND REPUTATION IS INVOLVED, IT\'S IMPORTANT YOU CHOOSE PEOPLE THAT FIERCELY PROTECT IT.') }}
                </h1>
-                    <p class="text-normal mb-10 max-w-xl text-center">As former Marketing and Creative Directors, our founders have walked similar paths to yours. Our hand-picked team represent the best in their chosen areas.</p>
-                    <p class="text-normal mb-10 max-w-xl text-center">Together, we bring bags of experience to the table, who get to the heart of what you're looking to achieve with creative efficiency.</p>
-                    <p class="text-normal mb-10 max-w-xl text-center">We think and act like the agency you want to engage with.</p>
+                    <p class="text-normal mb-10 max-w-xl text-center">{{ getContent('about', 'section2_paragraph_1', 'As former Marketing and Creative Directors, our founders have walked similar paths to yours. Our hand-picked team represent the best in their chosen areas.') }}</p>
+                    <p class="text-normal mb-10 max-w-xl text-center">{{ getContent('about', 'section2_paragraph_2', 'Together, we bring bags of experience to the table, who get to the heart of what you\'re looking to achieve with creative efficiency.') }}</p>
+                    <p class="text-normal mb-10 max-w-xl text-center">{{ getContent('about', 'section2_paragraph_3', 'We think and act like the agency you want to engage with.') }}</p>
            </div>
 
                 <!-- Galería de imágenes de About -->
@@ -145,12 +165,12 @@ onMounted(() => {
            
            <div class="w-full lg:h-screen py-40 lg:py-0 flex flex-col justify-center items-center px-8">
                <h1 class="lg:text-7xl text-4xl max-w-3xl text-center font-extrabold transform scale-y-75 mb-5">
-                WHY PEOPLE WORK WITH US
+                {{ getContent('about', 'section3_title', 'WHY PEOPLE WORK WITH US') }}
                </h1>
-                    <p class="text-normal mb-5 max-w-4xl text-center">We produce strategic brand, marketing and creative work that bottles the team's collective experience and energy to deliver exceptional results at lightning pace.</p>
-                    <p class="text-normal mb-5 max-w-4xl text-center">Whether we're creating a new or refreshed brand, revitalising your value proposition and product marketing, or launching an integrated marketing campaign, we consistently deliver the wow factor.</p>
-                    <p class="text-normal mb-5 max-w-4xl text-center">We trade in FOMO. We create the glue for your every word, and the itch to engage with your brand.</p>
-                    <p class="text-normal mb-0 max-w-4xl text-center">There's that itch again.</p>
+                    <p class="text-normal mb-5 max-w-4xl text-center">{{ getContent('about', 'section3_paragraph_1', 'We produce strategic brand, marketing and creative work that bottles the team\'s collective experience and energy to deliver exceptional results at lightning pace.') }}</p>
+                    <p class="text-normal mb-5 max-w-4xl text-center">{{ getContent('about', 'section3_paragraph_2', 'Whether we\'re creating a new or refreshed brand, revitalising your value proposition and product marketing, or launching an integrated marketing campaign, we consistently deliver the wow factor.') }}</p>
+                    <p class="text-normal mb-5 max-w-4xl text-center">{{ getContent('about', 'section3_paragraph_3', 'We trade in FOMO. We create the glue for your every word, and the itch to engage with your brand.') }}</p>
+                    <p class="text-normal mb-0 max-w-4xl text-center">{{ getContent('about', 'section3_paragraph_4', 'There\'s that itch again.') }}</p>
                 </div>
 
                 <!-- Galería de imágenes del equipo -->
@@ -162,7 +182,7 @@ onMounted(() => {
             
            <div class="w-full lg:h-screen py-40 lg:py-0 flex flex-col justify-center items-center px-8">
             <h1 class="lg:text-7xl text-4xl max-w-3xl text-center font-extrabold transform scale-y-75 mb-5">
-                ALWAYS HUNGRY. ALWAYS LEARNING. ALWAYS READY TO DELIVER.
+                {{ getContent('about', 'section4_title', 'ALWAYS HUNGRY. ALWAYS LEARNING. ALWAYS READY TO DELIVER.') }}
             </h1>
             </div>
 

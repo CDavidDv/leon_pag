@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import ApplicationMark from '@/Components/ApplicationMark.vue';
+import ApplicationMarkEdit from '@/Components/ApplicationMarkEdit.vue';
 import Banner from '@/Components/Banner.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
@@ -146,7 +146,7 @@ defineExpose({
 
         <Banner />
 
-        <div v-if="isShowMenuMobile" id="menuMobile" class="fixed  w-full h-full flex flex-col justify-end bottom-0 bg-[#0A15E3] left-0 right-0 z-[100]" >
+        <div v-if="isShowMenuMobile" id="menuMobile" class="fixed  w-full h-full flex flex-col justify-end bottom-0 left-0 right-0 z-[100]" style="background-color: var(--site-background-color, #0A15E3);" >
             <div class="fixed top-0 pr-14 mt-10 right-0">
                 <div class="size-10  cursor-pointer  flex justify-center  items-center" @click="showMenuMobile">
                     <svg xmlns="http://www.w3.org/2000/svg"  clas1s="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -159,23 +159,23 @@ defineExpose({
             <div class="flex flex-col gap-4 p-10 w-full h-full justify-center items-start font-extrabold text-white ">
                 <div class="space-x-4 sm:-my-px sm:ms-10 lg:flex text-2xl">
                             <ResponsiveNavLink :href="route('index')" :active="route().current('index')">
-                                Home
+                                Inicio
                             </ResponsiveNavLink>
                         </div>
                         <div class="space-x-4 sm:-my-px sm:ms-10 lg:flex">
                             <ResponsiveNavLink :href="route('work')" :active="route().current('work')">
-                                Work
+                                Trabajos
                             </ResponsiveNavLink>
                         </div>
                         <div class="space-x-4 sm:-my-px sm:ms-10 lg:flex">
                             <ResponsiveNavLink :href="route('approach')" :active="route().current('approach')">
-                                Aproach
+                                Enfoque
                             </ResponsiveNavLink>
                         </div>
                         
                         <div class="space-x-4 sm:-my-px sm:ms-10 lg:flex">
                             <ResponsiveNavLink :href="route('about')" :active="route().current('about')">
-                                About Us
+                                Sobre Nosotros
                             </ResponsiveNavLink>
                         </div>
 
@@ -185,7 +185,7 @@ defineExpose({
                                 :is-editing="isEditing"
                                 tag="div"
                                 class="text-white text-5xl font-extrabold"
-                                placeholder="Get in touch"
+                                placeholder="Contáctanos"
                                 @change="handleGetInTouchChange"
                             />
                         </div>
@@ -193,7 +193,7 @@ defineExpose({
         </div>
 
         <div v-if="isShowBarContact" id="barContact" class="fixed w-full h-full  flex justify-end bottom-0 left-0 right-0 bg-black/40 z-[100]" @click.self="showBarContact">
-            <div class="w-7/12 h-full bg-[#0A15E3] overflow-y-auto">
+            <div class="w-7/12 h-full overflow-y-auto" style="background-color: var(--site-background-color, #0A15E3);">
                 <div class="p-4">
                     <div class="flex justify-between">
                         <div class="flex flex-col pl-10 pr-10">
@@ -246,7 +246,7 @@ defineExpose({
 
 
         <div v-if="isShowBarContactMobile" id="barContactMobile" class="fixed  w-full h-full flex justify-end bottom-0 left-0 right-0 bg-black/40 z-[100]" @click.self="showBarContactMobile">
-            <div class="w-full h-full bg-[#0A15E3]  overflow-y-auto">
+            <div class="w-full h-full overflow-y-auto" style="background-color: var(--site-background-color, #0A15E3);">
                 <div class="w-full flex  justify-end pr-10 pt-10" >
                     <div class="size-10 cursor-pointer flex justify-center  items-center" @click="showBarContactMobile">
                         <svg xmlns="http://www.w3.org/2000/svg"  clas1s="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -307,8 +307,8 @@ defineExpose({
             <nav :class="[
                 'fixed w-full z-50 transition-all duration-300 pt-5',
                 isNavbarVisible ? 'translate-y-0' : '-translate-y-full',
-                'lg:bg-transparent bg-[#0A15E3] pb-8 lg:pb-0'
-            ]">
+                'lg:bg-transparent pb-8 lg:pb-0'
+            ]" style="background-color: var(--site-background-color, #0A15E3);">
 
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto   sm:px-6 md:px-1 lg:px-8">
@@ -316,7 +316,7 @@ defineExpose({
                         <div class="flex justify-end">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <ApplicationMark class="block h-14 p-1 pl-8 w-auto" />
+                                <ApplicationMarkEdit :is-editing="isEditing" class="block h-14 p-1 pl-8 w-auto" />
                             </div>
     
                             <!-- Navigation Links -->
@@ -484,7 +484,7 @@ defineExpose({
 <style>
 main {
     font-family: 'Anton', sans-serif;
-    background-color: #0A15E3 !important;
+    background-color: var(--site-background-color, #0A15E3) !important;
 }
 
 main {

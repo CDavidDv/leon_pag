@@ -138,7 +138,7 @@ class DashboardController extends Controller
 
     public function approachEdit(): Response
     {
-        $sections = ['welcome', 'approach', 'services', 'service_1', 'service_2', 'service_3'];
+        $sections = ['logo', 'welcome', 'approach', 'services', 'service_1', 'service_2', 'service_3'];
         $content = [];
         $media = [];
 
@@ -171,7 +171,7 @@ class DashboardController extends Controller
 
     public function aboutEdit(): Response
     {
-        $sections = ['welcome', 'about', 'team', 'contact'];
+        $sections = ['logo', 'welcome', 'about', 'team', 'contact'];
         $content = [];
         $media = [];
 

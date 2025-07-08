@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            SiteConfigSeeder::class,
             WorkContentSeeder::class,
             MediaSeeder::class,
         ]);

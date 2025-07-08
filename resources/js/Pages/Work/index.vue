@@ -106,13 +106,19 @@ const processImages = (images) => {
             path: image.url || getImageUrl(image.path)
         }));
 };
-
+const appLayoutRef = ref(null);
 // Función para mostrar el bar de contacto
 const showBarContact = () => {
-    // Esta función se maneja a través del AppLayout
-    console.log('showBarContact desde Work');
+    console.log('showBarContact called from Work index');
+    console.log('appLayoutRef.value:', appLayoutRef.value);
+    
+    if (appLayoutRef.value) {
+        console.log('Calling appLayoutRef.value.showBarContact()');
+        appLayoutRef.value.showBarContact();
+    } else {
+        console.error('appLayoutRef.value is null or undefined');
+    }
 };
-
 // Cargar datos multimedia
 const cargarMultimedia = async () => {
     try {
@@ -240,7 +246,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <AppLayout title="Work By Experience">
+    <AppLayout title="dciimpresiones" ref="appLayoutRef">
         <div>
             <ImgHero :image="heroImage || 'https://placehold.co/400x600'" />
             
@@ -420,6 +426,7 @@ onMounted(() => {
             <Footer :footer-text="textContent.footer.footer_text" />
 
             <FloatingButton 
+                :is-editing="false"
                 :floating-button-image="floatingButtonImage"
                 @showBarContact="showBarContact"
             />

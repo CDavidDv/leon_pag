@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Variables CSS personalizadas para colores del sitio */
+:root {
+    --site-background-color: #0A15E3;
+    --site-primary-color: #0A15E3;
+    --site-secondary-color: #ffffff;
+}
+
+/* Clases utilitarias para usar las variables CSS */
+.bg-site-primary {
+    background-color: var(--site-background-color);
+}
+
+.text-site-primary {
+    color: var(--site-primary-color);
+}
+
+.border-site-primary {
+    border-color: var(--site-primary-color);
+}
+
 [x-cloak] {
     display: none;
 }
